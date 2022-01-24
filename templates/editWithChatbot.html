@@ -1,0 +1,154 @@
+{% extends "common/headerAndFooter.html" %}
+{% load static %}
+
+{% block navbar %}
+     {% include "common/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/non-selectable-list-item.css' %}">
+<link rel="stylesheet" href="{% static 'css/basic-dropdown.css' %}">
+<link rel="stylesheet" href="{% static 'css/slider.css' %}">
+<link rel="stylesheet" href="{% static 'css/basic-tooltip.css' %}">
+
+<!-- django to javascript interface -->
+<script>
+     var maxSentenceLength = {{ max_input_sentence_length }};
+     var maxNrParagraphs = {{ max_nr_paragraphs }};
+     var maxNrChapters = {{ max_nr_chapters }};
+     var maxParagraphLength = {{ max_paragraph_length }};
+     var paragraphLeyway = {{ paragraph_leyway }};
+     var maxFinalParagraphLen = maxParagraphLength + paragraphLeyway;
+     var maxTotalLength = {{ max_total_length }};
+     var maxChapterLength = {{ max_chapter_length }};
+     var maxTitleLength = {{ max_title_length }};
+
+     {% if loaded_story %}
+          var loadedContent = {{ loaded_story.text_content | safe }};
+          var storyName     = `{{ loaded_story.name | safe }}`;
+     {% else %}
+          var loadedContent = null;
+          var storyName     = null;
+     {% endif %}
+
+     var talkUrl = '{% url "main:talk-to" %}';
+     var saveUrl = '{% url "main:save-story" %}';
+     var contentInd = 0;
+     var nrParagraphs = 0;
+     var nrChapters = 0;
+     var paragraphTemplate = `{% include "WidgetTemplates/paragraphTemplate.html" %}`;
+     var chapterTemplate = `{% include "WidgetTemplates/chapterTemplate.html" %}`;
+
+     var chapterType = `{{chapter_tag}}`;
+     var paragraphType = `{{paragraph_tag}}`;
+     var titleTag = `{{title_tag}}`;
+
+     var maximumChangeAttempts = 10;
+</script>
+
+{{log_form.media}}
+{% include "Modals/simpleModal.html" %}
+{% include "Modals/callbackModal.html" %}
+{% include "Modals/inputModal.html" %}
+
+<div class='row'>
+     <div id='scrollable-data' class='col-md-3 px-2 py-1 basic-dropdown'>
+          <button class = 'btn rounded-select scroll-top px-8 ml-5 px-5' style='justify-content: center;'>Scroll Chapter</button>
+          <div class='list-group basic-dropdown-content fixed-top user-select-none' id='contents-chapters'></div>
+     </div>
+  
+     <div class='col-md-3'>        
+          <label class='text-muted'
+               title="Each chatbot will generate text in a certain style or usecase.">
+               Select Chatbot
+          </label>
+          <select id='model-select' class='rounded-select'>
+               {% for bot in chatbots %}
+                    <option value = {{ bot.path }} name = {{ bot.id }}>{{ bot.name }}</option>
+               {% endfor %}
+          </select>
+     </div>
+
+     <div class='col-md-3'>        
+          <label class='text-muted' data-toggle='tooltip' 
+               title="You can create your own vocabulary (using 'Edit Vocab') and replace the words the AI uses.">
+               Select Vocabulary
+          </label>
+          <select id='vocab-select' class='rounded-select'>
+               <option value = "-1" name = "-1"> Default </option>
+               {% for vocab in vocabs %}
+                    <option id = "{{ vocab.name }}" value = {{ vocab.id }} name = "{{ vocab.bot_id }}">{{ vocab.name }}</option>
+               {% endfor %}
+          </select>
+     </div>
+
+     <div class="slidecontainer col-md-3 py-1">
+          <label class='text-muted px-1'
+               title="The temperature of the model determines the randomness of the results returned.">
+               Model Temperature
+          </label>
+          <div class = "basicTooltip">
+               <input id='temperature-slider' type='range' min='10' max='100' value='50'>
+               <span id='temperature-tooltip' class="basicTooltiptext">50%</span>
+          </div>
+     </div>
+</div>
+
+<br>
+
+<div class='ml-4 overflow-auto scrollable-stuff bg-light border border-dark rounded' style = 'position: relative; height: 480px'>
+     <br>
+
+     <div class='px-5' id='edit-area' data-spy='scroll' data-target='#scrollable-data' data-offset='0'></div>
+     <div class = 'row mt-3 px-5'>
+          <button class='btn btn-danger talk-to px-2 ml-2 mt-2 mb-5' id='btn-new-para'>New Paragraph</button>
+          <button class='btn btn-danger talk-to px-2 ml-2 mt-2 mb-5' id='btn-new-chap'>New Chapter</button>
+     </div>
+</div>
+
+<br><br>
+
+<div class = "container">
+     <div class = "border border-dark rounded px-2 py-2 bg-light" >
+          <span class = "px-2">
+               <div class="spinner-border text-success invisible loading-spinner" role="status">
+                    <span class="sr-only">Loading...</span>
+               </div>
+
+               <button class = "btn btn-success save-story px-8 ml-1">Save</button>
+               <button class = "btn btn-success save-as-story px-8 ml-1">Save As</button>
+               <button class = "btn btn-success scroll-bottom px-8 ml-1">Scroll Bottom</button>
+               <button class = "btn btn-success scroll-top px-8 ml-1">Scroll Top</button>
+               <button class = "btn btn-success download-story px-8 ml-1">Download</button>
+               {% csrf_token %}
+          </span>
+     </div>
+</div>
+
+
+<script src="{% static 'js/chatbot.utility.js' %}"></script>
+<script src="{% static 'js/common.utility.js' %}"></script>
+<script src="{% static 'js/chatbot.display.js' %}"></script>
+
+<script>
+     $('#btn-new-para').click(appendParagraphToList);
+     $('#btn-new-chap').click(appendChapterToList);
+
+     $('.save-as-story').click(saveChatLog);
+     $('.save-story').click(saveNamedChatlog);
+     $('.scroll-bottom').click(scrollToBottom);
+     $('.scroll-top').click(scrollToTop);
+     $('.download-story').click(downloadStory);
+
+     $('.scrollable-stuff').scrollspy({ target: '#scrollable-data' });
+     $('#temperature-slider').on('change', changeTemperatureTooltip);
+     $('#model-select').on('change', updateVocabOptions);
+
+     updateVocabOptions();
+     intializeStoryContent(loadedContent);
+</script>
+
+
+
+{% endblock %}

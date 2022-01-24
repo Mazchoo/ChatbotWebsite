@@ -1,0 +1,71 @@
+{% extends "common/headerAndFooter.html" %}
+{% load static %}
+
+{% block navbar %}
+     {% include "common/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Instructions -->
+<div class="container">
+     <div id="accordion">
+          <div class="card">
+               <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Hidden Instructions
+                         </button>
+                    </h5>
+               </div>
+               <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                         <blockquote class="blockquote mb-0">
+                              <h6 class = "px-3">
+                                   You can change the words that a chat bot uses. First select a chat bot
+                                   from the choices below. Loading all the words may take some time.
+                              </h6>
+                         </blockquote>
+                    </div>
+               </div>
+          </div>
+     </div>
+</div>
+
+<br>
+
+<div class="container">
+     <br>
+     <div class="card">
+          <div class="card-body mx-4">
+               <h3>Select a Chatbot to edit the Vocabulary</h3>
+          </div>
+     </div>
+     
+     <br><br>
+     <div class="row">
+          {% for bot in chatbots %}
+               <div class="mb-3 col-md-3">
+                    <div class="card border-dark" style="max-width: 18rem;">
+                         <div class="card-header"></div>
+                         <div class="card-body text-dark">
+                              <h5 class="card-title">{{ bot.name }}
+                                   <img src="{% static 'image/'|add:bot.icon_name %}" alt="...">
+                              </h5>
+                              <a href = "{% url 'main:alter-vocab' bot_path=bot.path%}">
+                                   <button class="btn-sm btn-primary">
+                                        <i class='fa fa-pencil style'></i>
+                                   </button>
+                              </a>
+                         </div>
+                    </div>
+               </div>
+          {% endfor %}
+     </div>
+</div>
+
+
+<script>
+</script>
+
+{% endblock %}

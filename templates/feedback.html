@@ -1,0 +1,121 @@
+{% extends "Common/headerAndFooter.html" %}
+{% load static %}
+{% load pipe_functions %}
+
+{% block content %}
+{% include "Backgrounds/Leaf.html" %}
+{% include "FormStyles/CommonForm.html" %}
+{{log_form.media}}
+
+<br>
+<div  class = "container">
+    <form method = "POST" action = "" class = "card container">
+        <br>
+        <h2>Feedback</h2>
+        <br>
+        <div class="card-body">
+            <div class = "container">
+                <br>
+                <div class = "jumbotron form-input">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input id = "id_extra" name = "extra" type = "hidden"></input>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2" name = "submitFeedback">Submit</button>
+                <br><br>
+            </div>
+        </div>
+    </form>
+    <form method = "POST" action = "" class = "card container">
+        <br>
+        <h2>Chat Log Editor</h2>
+        <br>
+        <div class="card-body">
+            <div class = "container">
+                <br>
+                <div class = "jumbotron form-input">
+                    {% csrf_token %}
+                    {{log_form}}
+                    <input id = "id_extra" name = "extra" type = "hidden"></input>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2" name = "submitDocument">Submit</button>
+                <br><br>
+            </div>
+        </div>
+    </form>
+    <form method = "POST" action = "" class = "card container">
+        <br>
+        <h2>Vocab</h2>
+        <br>
+        <div class="card-body">
+            <div class = "container">
+                <br>
+                <div class = "jumbotron form-input">
+                    {% csrf_token %}
+                    <p>Description: {{vocab_form.description}}</p>
+                    <p>Bot Name: {{vocab_form.bot_name}}</p>
+                    <p>{{ noob|upper|add:"..."|replaceVocab:"{'OOB': 'UB'}" }}</p>
+                    <input id = "id_extra" name = "extra" type = "hidden"></input>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2" name = "submitDocument">Submit</button>
+                <br><br>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Button trigger modal -->
+<div class = "container">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Launch demo modal
+  </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        This a message to confirm a vocab alteration
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <input class="form-control" id="listSearch" type="text" placeholder="Type something to search list items">
+  <br>
+  <ul class="list-group" id="searchableItems">
+    <li class="list-group-item">First item</li>
+    <li class="list-group-item">Second item</li>
+    <li class="list-group-item">Third item</li>
+    <li class="list-group-item">Fourth item</li>
+  </ul>
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#listSearch").on("keyup", function() {
+    var searchValue = $(this).val().toLowerCase();
+    $("#searchableItems li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1)
+    });
+  });
+});
+</script>
+
+<script>
+    let errorList = $(".errorlist");
+    errorList.addClass("alert alert-danger");
+</script>
+{% endblock %}

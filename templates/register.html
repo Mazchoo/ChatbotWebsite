@@ -1,0 +1,48 @@
+{% extends "Common/headerAndFooter.html" %}
+{% load static %}
+{% block content %}
+{% include "Backgrounds/Topography.html" %}
+
+<br>
+<div  class = "container">
+    <form method = "POST" action = "" class = "card container", enctype = "multipart/form-data">
+        <br>
+        <h2>Register</h2>
+        <br>
+        <div class="card-body">
+            {% csrf_token %}
+            {% for field in register_form %}
+                <div class="form-group">
+                    <i class="fa fa-user-md" aria-hidden="true"></i>
+                    <label>{{ field.label }} : </label><br>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <span class="form-group">
+                <p>
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    Maximum 3MB file size
+                </p>
+                {{ profile_form.as_p }}
+            </span>
+            <br>
+            <button type="submit" class="btn btn-primary mb-2" name = "createUser">Submit</button>
+            <br><br>
+            <div id = "error-log" class="alert alert-danger invisible" role="alert">
+                {{ register_form.errors }}
+            </div>
+            <ul>
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+        <div>
+    </form>
+</div>
+
+{% if register_form.errors %}
+    <script>document.getElementById("error-log").classList.remove('invisible');</script>
+{% endif %}
+
+{% endblock %}

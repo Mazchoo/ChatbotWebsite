@@ -1,0 +1,112 @@
+{% extends "common/headerAndFooter.html" %}
+{% load static %}
+
+{% block navbar %}
+{% include "common/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<!-- declare chatbot variables (change at your own risk) -->
+<script>
+     var maxVocabLength = {{ max_vocab_length }};
+     var maxWordSize = {{ max_word_size }};
+     var maxTitleLength = {{ max_title_length }};
+     var chatbotName = `{{ chat_bot.path }}`;
+
+     var vocabLength = 0;
+
+     {% if loaded_vocab %}
+          var loadedContent = {{ loaded_vocab.alterations | safe }};
+          var vocabName     = `{{ loaded_vocab.name | safe }}`;
+     {% else %}
+          var loadedContent = null;
+          var vocabName     = null;
+     {% endif %}
+
+     var alterationTemplate = `{% include "WidgetTemplates/vocabChangeTemplate.html" %}`;
+     var saveUrl = '{% url "main:save-vocab" %}';
+</script>
+
+<script src="{% static 'js/common.utility.js' %}"></script>
+<script src="{% static 'js/alteration.display.js' %}"></script>
+
+{% include "Modals/alterationModal.html" %}
+{% include "Modals/simpleModal.html" %}
+{% include "Modals/inputModal.html" %}
+
+<!-- Instructions -->
+<div class="container">
+     <div id="accordion">
+          <div class="card">
+               <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Hidden Instructions
+                         </button>
+                    </h5>
+               </div>
+               <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                         <blockquote class="blockquote mb-0">
+                              <h6 class = "px-3">
+                                   You can make your own custom vocabulary. 
+                                   Each chatbot has a vocabulary of words that it recognises and produces.
+                                   Press control and F, to find a word in your browser.
+                                   Click a word to provide a replacement.
+                                   You can put a new word inplace of the old word. 
+                                   When you are finished, you can save these word alterations.
+                                   (Remember that vocabulary changes will be applied in sequence)
+                              </h6>
+                         </blockquote>
+                    </div>
+               </div>
+          </div>
+     </div>
+</div>
+
+<br>
+
+<div class="container">
+     <div class = "row">
+          <div class='col-md-3'>
+               <a class="btn btn-success btn-block" role="button" id="save-alterations-as">
+                    Save Alterations As
+               </a>
+          </div>
+          <div class='col-md-3'>
+               <a class="btn btn-success btn-block" role="button" id="save-alterations">
+                    Save Alterations
+               </a>
+          </div>
+          {% csrf_token %}
+     </div>
+
+     <br>
+     <ul class="list-group">
+          <div class = "row" id = "vocab-alterations"></div>
+     </ul>
+</div>
+
+<br>
+
+<div class="container">
+     <ul class="list-group" id="searchableItems">
+          <div class = "row">
+               {% for word in chat_bot.public_vocab %}    
+                    <li class="list-group-item border border-secondary rounded vocab-word" style='cursor: pointer;'>
+                         {{ word }}
+                    </li>
+               {% endfor %}
+          </div>
+     </ul>
+</div>
+
+<script>
+     $('.vocab-word').click(chooseAlteration);
+     $('#save-alterations-as').click(saveAlteration);
+     $('#save-alterations').click(saveExistingVocabContent);
+
+     intializeVocabContent(loadedContent);
+</script>
+
+{% endblock %}

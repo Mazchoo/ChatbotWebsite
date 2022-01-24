@@ -1,0 +1,58 @@
+{% load static %}
+
+ <nav aria-label="breadcrumb">
+     <div class = "row">
+          <ol class="breadcrumb col-md-10">
+               <li style = "width: 8%"><wbr></li> 
+               <li class="breadcrumb-item active" aria-current="page">
+                    <a href = "{% url 'main:homepage' %}">
+                         <img src="{% static 'image/Sun.png' %}" class="d-block w-30 mx-auto" alt="...">[Home]
+                    </a>
+               </li>
+               {% if request.user.is_authenticated %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                         <p class = "invisible">----------</p>
+                         <a href = "{% url 'main:write-story' %}">
+                              <img src="{% static 'image/blue.png' %}" class="d-block w-30 mx-auto" alt="...">[Write Story]
+                         </a>
+                         <p class = "invisible">----------</p>
+                         <a href = "{% url 'main:alter-vocab-select' %}">
+                              <img src="{% static 'image/red.png' %}" class="d-block w-30 mx-auto" alt="...">[Change Vocab]
+                         </a>
+                         <p class = "invisible">----------</p>
+                         <a href = "{% url 'main:saved-content' %}">
+                              <img src="{% static 'image/Book.png' %}" class="d-block w-30 mx-auto" alt="...">[Saved Content]
+                         </a>
+                         <p class = "invisible">----------</p>
+                    </li>
+               {% endif %}
+          </ol>
+          {% if request.user.is_authenticated %}
+               <ol class="breadcrumb col-md-2">
+                    <li class="breadcrumb-item active" aria-current="page">
+                         <a href = "#"><img src="{% static 'image/Jellyfish.png' %}" class="d-block w-30 mx-auto" alt="...">
+                              [{{request.user}}]
+                         </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                         <a href = "{% url 'main:logout' %}">
+                              <img src="{% static 'image/Boom.png' %}" class="d-block w-30 mx-auto" alt="...">[Log Out]
+                         </a>
+                    </li>
+               </ol>
+          {% else %}
+               <ol class="breadcrumb col-md-2">
+                    <li class="breadcrumb-item active" aria-current="page">
+                         <a href = "{% url 'main:login' %}">
+                              <img src="{% static 'image/Dude.png' %}" class="d-block w-30 mx-auto" alt="..."> [Log In]
+                         </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                         <a href = "{% url 'main:register' %}">
+                              <img src="{% static 'image/Bag.png' %}" class="d-block w-30 mx-auto" alt="...">[Register]
+                         </a>
+                    </li>
+               </ol>
+          {% endif %}
+     </div>
+</nav>

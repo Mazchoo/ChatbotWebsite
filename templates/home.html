@@ -1,0 +1,96 @@
+{% extends "common/headerAndFooter.html" %}
+{% load static %}
+
+{% block navbar %}
+{% include "common/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<!-- declare chatbot variables (change at your own risk) -->
+<script>
+     var maxSentenceLength = {{ max_input_length }};
+     var chatbotName = "{{ bot_name }}";
+     var ajaxUrl = '{% url "main:talk-to" %}';
+</script>
+
+<!-- A card component -->
+
+<div class = "container">
+     <div class="card">
+          <div class="card-header">
+               <h6><b>Writing a story with a chatbot</b></h6>
+          </div>
+          <div class="card-body">
+               <blockquote class="blockquote mb-0">
+                    <h6 class = "px-3">Try using one of the chatbots below. You can save and edit stories after registering an account.</h6>
+               </blockquote>
+          </div>
+     </div>
+</div>
+
+<br>
+
+<div class = "container overflow-auto scrollable-stuff bg-light border border-dark rounded" style = "position: relative; height: 300px">
+     <div class = "px-5" data-spy="scroll" data-target="#scrollable-data" data-offset="0">
+          <ul class  = "chat-box" type="square">
+               <br>
+               <p>==== Chat log ====</p>
+               <p class = "px-2">Hello</p>
+          </ul>
+     </div>
+</div>
+
+<!-- Below is the proof of concept of what we are interested in-->
+<br><br>
+<div class = "container">
+     <div class = "border border-dark rounded px-2 py-2 bg-light" >
+          <p>This chatbot was trained on movie dialogs...</p>
+          <span class = "px-2">
+               <div class="spinner-border text-success invisible loading-spinner" role="status">
+                    <span class="sr-only">Loading...</span>
+               </div>
+               <button class = 'btn btn-dark talk-to px-8'>Talk</button>
+               <input value="" class="talk px-8" name = "talk" type="text" style="width: 40%">
+               <button class = "btn btn-success scroll-bottom px-8">Scroll Bottom</button>
+               <button class = "btn btn-success scroll-top px-8">Scroll Top</button>
+               {% csrf_token %}
+          </span>
+     </div>
+</div>
+
+
+<script src="{% static 'js/chatbot.utility.js' %}"></script>
+<script src="{% static 'js/common.utility.js' %}"></script>
+<script>
+
+     let successCallback = function(response) {
+          $('.chat-box').append('<p class = "px-2">' + response + '</p>')
+          scrollToBottom();
+     }
+
+
+     let talkToBot = function() {
+          let inputLine = $('.talk').val();
+          $('.talk')[0].value = '';
+
+          if (verifyInput(inputLine)) {
+               $('.chat-box').append('<li><i>' + inputLine + '</i></li>');
+               submitChatbotRequest(inputLine, chatbotName, "50", successCallback, ajaxUrl);
+          }  
+     }
+
+     document.onkeydown = function(e){
+          e = e || window.event;
+          var key = e.which || e.keyCode;
+          if (key === 13) {
+               talkToBot();
+          }
+     }
+
+     $('.scrollable-stuff').scrollspy({ target: '#scrollable-data' });
+     $('.talk-to').click(talkToBot)
+     $('.scroll-bottom').click(scrollToBottom);
+     $('.scroll-top').click(scrollToTop);
+</script>
+
+{% endblock %}

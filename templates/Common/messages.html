@@ -1,0 +1,55 @@
+{% if messages %}
+  {% for message in messages %}
+    <script>
+        var color = "black";
+        var iconFa = "fa-lemon-o";
+        var title = " : Message"
+    </script>
+    {% if message.tags == 'success' %}
+        <script>
+            color = "green";
+            iconFa = "fa-check-square-o";
+            title = " : Success!";
+        </script>
+    {% elif message.tags == 'info' %}
+        <script>
+            color = "blue";
+            iconFa = "fa-info";
+            title = " : Info";
+        </script>
+    {% elif message.tags == 'warning' %}
+            <script>
+                color = "orange";
+                iconFa = "fa-wrench";
+                title = " : Warning!";
+            </script>
+    {% elif message.tags == 'error' %}
+            <script>
+                color = "red";
+                iconFa = "fa-exclamation";
+                title = " : Alert";
+            </script>
+    {% elif message.tags == 'debug' %}
+            <script>
+                color = "purple";
+                iconFa = "fa-tree";
+                title = " : Debug";
+            </script>
+    {% endif %}
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay = "20000">
+          <div class="toast-header">
+            <script>document.write('<i class="fa ' + iconFa + '" aria-hidden="true" style = "color : ' + color + '"></i>')</script>
+            <strong class="mr-auto">
+                <script>document.write(title)</script>
+            </strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+             {{message}}
+          </div>
+     </div>
+  {% endfor %}
+{% endif %}
+<script>$('.toast').toast("show")</script>

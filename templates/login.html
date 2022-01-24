@@ -1,0 +1,39 @@
+{% extends "Common/headerAndFooter.html" %}
+{% load static %}
+{% block content %}
+{% include "Backgrounds/Topography.html" %}
+
+<br>
+
+<div  class = "container">
+    <form method = "POST" action = "" class = "card container">
+        {% csrf_token %}
+        <br>
+        <h2>Log In</h2>
+        <br>
+        <div class="card-body">
+            <div class = "container">
+                <div class="form-group">
+                    <i class="fa fa-user-md" aria-hidden="true"></i>
+                    <label>Username : </label><br>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="username" name = "username" aria-describedby="basic-addon1">
+                </div>
+                <div class="form-group">
+                    <i class="fa fa-user-md" aria-hidden="true"></i>
+                    <label>Password : </label><br>
+                    <input type="text" class="form-control" placeholder="Password" aria-label="password" name = "password" aria-describedby="basic-addon1">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary mb-2" name = "logInAttempt">Submit</button>
+                <br><br>
+                <div id = "error-log" class="alert alert-danger invisible" role="alert">
+                    {{register_form.errors}}
+                </div>
+            </div>
+        <div>
+    </form>
+</div>
+{% if register_form.errors %}
+    <script>document.getElementById("error-log").classList.remove('invisible');</script>
+{% endif %}
+{% endblock %}

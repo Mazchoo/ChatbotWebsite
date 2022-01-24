@@ -1,0 +1,37 @@
+<div class='col col-md-11 py-2 border border-dark rounded bg-white mt-2 paragraph-region-%{contentInd}' name='{{paragraph_tag}}%{contentInd}'>
+    <form method = 'get' action = '' class = 'card container'>
+        <textarea class='talk save-content' name='message' cols='40' rows='10' required='' id='{{paragraph_tag}}%{contentInd}' aria-hidden='true' style='min-height: 300px;'></textarea>
+    </form>
+</div>
+<div class='col col-md-1 py-2 paragraph-region-%{contentInd}'>
+    <div class='row ml-3 mt-3'>
+        <button id='generate-content%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Add AI text' name='#{{paragraph_tag}}%{contentInd}_ifr'>
+            <i id='generate-content%{contentInd}' class='fa fa-pencil style header_button_icon' name='#{{paragraph_tag}}%{contentInd}_ifr'></i>
+        </button>
+    </div>
+    <div class='row ml-3 mt-3'>
+        <button id='delete-content%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Delete' name='.paragraph-region-%{contentInd}'>
+            <i id='delete-content%{contentInd}' class='fa fa-trash style header_button_icon' name='.paragraph-region-%{contentInd}'></i>
+        </button>
+    </div>
+    <div class='row ml-3 mt-3'>
+        <button id='insert-paragraph%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Insert Paragraph' name='.paragraph-region-%{contentInd}'>
+            <i id='insert-paragraph%{contentInd}' class='fa fa-paragraph style header_button_icon' name='.paragraph-region-%{contentInd}'></i>
+        </button>
+    </div>
+    <div class='row ml-3 mt-3'>
+        <button id='insert-chapter%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Insert Chapter' name='.paragraph-region-%{contentInd}'>
+            <i id='insert-chapter%{contentInd}' class='fa fa-header style header_button_icon' name='.paragraph-region-%{contentInd}'></i>
+        </button>
+    </div>
+    <div class='row ml-3 mt-3'>
+        <button id='move-content-up%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Move Up' name='.paragraph-region-%{contentInd}'>
+            <i id='move-content-up%{contentInd}' class='fa fa-arrow-up style header_button_icon' name='.paragraph-region-%{contentInd}'></i>
+        </button>
+    </div>
+    <div class='row ml-3 mt-3'>
+        <button id='move-content-down%{contentInd}' class='btn btn-primary btn-sm talk-to px-2 talk-button' data-toggle='tooltip' title='Move Down' name='.paragraph-region-%{contentInd}'>
+            <i id='move-content-down%{contentInd}' class='fa fa-arrow-down style header_button_icon' name='.paragraph-region-%{contentInd}'></i>
+        </button>
+    </div>
+</div>

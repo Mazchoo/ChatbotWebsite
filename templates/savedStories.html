@@ -1,0 +1,76 @@
+{% extends "common/headerAndFooter.html" %}
+{% load static %}
+
+{% block navbar %}
+{% include "common/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/dashed-line.css' %}">
+
+<div class="container">
+     <br>
+     <div class="card">
+          <div class="card-body mx-4">
+               <h3>Saved Stories</h3>
+          </div>
+     </div>
+     
+     <br><br>
+     <div class="row">
+          {% for story in stories %}
+               <div class="mb-3 col-md-3">
+                    <div class="card border-dark" style="max-width: 18rem;">
+                         <div class="card-header"></div>
+                         <div class="card-body text-dark">
+                              <h5 class="card-title">{{ story.name }}</h5>
+                              <form name = "selection" method = 'post' action = "{% url 'main:load-story' %}">
+                                   {% csrf_token %}
+                                   <button class="btn-sm btn-primary" type="submit" name="story_id" value={{ story.id }}>
+                                        <i class='fa fa-pencil style'></i>
+                                   </button>
+                              </form>
+                         </div>
+                    </div>
+               </div>
+          {% endfor %}
+     </div>
+</div>
+
+<br>
+<div class="mb-4">
+     <hr class="dashed">
+</div>
+
+<div class="container">
+     <br>
+     <div class="card">
+          <div class="card-body mx-4">
+               <h3>Saved Vocabulary Alterations</h3>
+          </div>
+     </div>
+
+     <br><br>
+     <div class="row">
+          {% for vocab in vocabs %}
+               <div class="mb-3 col-md-3 mx-2">
+                    <div class="card border-dark" style="max-width: 18rem;">
+                         <div class="card-header"></div>
+                         <div class="card-body text-dark">
+                              <h5 class="card-title">{{ vocab.name }}</h5>
+                              <form name = "selection" method = 'post' action = "{% url 'main:load-vocab' %}">
+                                   {% csrf_token %}
+                                   <button class="btn-sm btn-primary" type="submit" name="vocab_id" value={{ vocab.id }}>
+                                        <i class="fa fa-plus style"></i>
+                                   </button>
+                              </form>
+                         </div>
+                    </div>
+               </div>
+          {% endfor %}
+     </div>
+</div>
+
+<script src="{% static 'js/common.utility.js' %}"></script>
+{% endblock %}
